@@ -1,0 +1,49 @@
+version: '3.3'
+
+services:
+  database:
+     image: mariadb
+     volumes:
+        - db_data:/var/lib/mysql
+     environment:
+       MYSQL_ROOT_PASSWORD: 'My_RootPWD'
+     networks:
+       - my-network
+
+  wordpress-1:
+     depends_on:
+       - database
+     image: wordpress:latest
+     ports:
+       - "5000:80"
+     volumes:
+       - ./site1/:/var/www/html/
+     environment:
+       WORDPRESS_DB_HOST: database:3306
+       WORDPRESS_DB_PASSWORD: My_RootPWD
+       WORDPRESS_DB_USER: root
+       WORDPRESS_DB_NAME: site_1_db
+     networks:
+       - my-network
+
+  wordpress-2:
+     depends_on:
+       - database
+     image: wordpress:latest
+     ports:
+       - "8000:80"
+     volumes:
+       - ./site2/:/var/www/html/
+     environment:
+       WORDPRESS_DB_HOST: database:3306
+       WORDPRESS_DB_PASSWORD: My_RootPWD
+       WORDPRESS_DB_USER: root
+       WORDPRESS_DB_NAME: site_2_db
+     networks:
+       - my-network
+
+volumes:
+    db_data:
+networks:
+  my-network:
+    driver: bridge
