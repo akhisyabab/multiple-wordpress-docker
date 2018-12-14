@@ -42,6 +42,19 @@ services:
      networks:
        - my-network
 
+  nginx:
+    container_name: nginx_
+    build:
+     context: ./services/nginx
+     dockerfile: Dockerfile-dev
+    ports:
+      - 80:80
+    depends_on:
+      - wordpress-1
+      - wordpress-2
+    networks:
+      - my-network
+
 volumes:
     db_data:
 networks:
